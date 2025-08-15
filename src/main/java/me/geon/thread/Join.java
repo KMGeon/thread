@@ -1,12 +1,24 @@
-package me.geon.thread.ch4;
-
-import me.geon.thread.Utils;
+package me.geon.thread;
 
 public class Join {
 	public static void main(String[] args) {
 		Utils.logger("Main Start ====");
 
-		new Job()
+		Job job1 = new Job(1, 50);
+		Job job2 = new Job(51, 100);
+
+		Thread t1 = new Thread(job1);
+		Thread t2 = new Thread(job2);
+
+		t1.start();
+		t2.start();
+
+		Utils.logger("task1.result ==" + job1.rtn);
+		Utils.logger("task2.result ==" + job2.rtn);
+
+		int sumAll = job1.rtn + job2.rtn;
+
+		Utils.logger("sumAll = " + sumAll);
 
 		Utils.logger("Main End ====");
 	}
@@ -30,7 +42,7 @@ public class Join {
 				sum += i;
 			}
 			rtn += sum;
-			Utils.timeSleep(2000);
+			Utils.timeSleep(15_000);
 			Utils.logger("작업끝 result = "+ rtn);
 		}
 	}

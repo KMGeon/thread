@@ -1,4 +1,4 @@
-package me.geon.thread.ch4;
+package me.geon.thread;
 
 import static me.geon.thread.Utils.*;
 

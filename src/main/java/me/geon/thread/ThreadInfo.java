@@ -1,4 +1,4 @@
-package me.geon.thread.ch4;
+package me.geon.thread;
 
 import static me.geon.thread.Utils.*;
 
@@ -12,7 +12,7 @@ public class ThreadInfo {
 		logger("mainThread.getThreadGroup() = " + mainThread.getThreadGroup());
 		logger("mainThread.getState() = " + mainThread.getState());
 
-		// > Task :me.geon.thread.ch4.ThreadInfo.main()
+		// > Task :me.geon.thread.ThreadInfo.main()
 		// 18:20:17.079 [main] mainThread = Thread[#1,main,5,main]
 		// 18:20:17.083 [main] mainThread Id = 1 # 중복되지 않는다.
 		// 18:20:17.083 [main] mainThreadName = main
@@ -51,19 +51,25 @@ public class ThreadInfo {
 }
 
 /**
-
- 1. ThreadGroup : 스레드가 속한 그룹을 반환을 한다.
- 기본적으로 모든 스레드는 부모 스레드와 동일한 스레드 그룹에 속한다.
- 	- 스레드 그룹를 기준으로 일괄 종료, 우선순위 설정을 할 수 있다.
-- 부모 스레드 : 위 코드를 예시로 myThread1의 부모는 main 르레드이다.
-
-
- // getState(): 스레드의 현재 상태를 반환하는 메서드이다. 반환되는 값은 Thread.State 열거형에 정의된 상수 중 하나이다.
- // 주요 상태는 다음과 같다.
- //   • NEW: 스레드가 아직 시작되지 않은 상태이다.
- //   • RUNNABLE: 스레드가 실행 중이거나 실행될 준비가 된 상태이다.
- //   • BLOCKED: 스레드가 동기화 락을 기다리는 상태이다.
- //   • WAITING: 스레드가 다른 스레드의 특정 작업이 완료되기를 기다리는 상태이다.
- //   • TIMED_WAITING: 일정 시간 동안 기다리는 상태이다.
- //   • TERMINATED: 스레드가 실행을 마친 상태이다.
+ * ==================== Thread 정보 정리 ====================
+ * 
+ * 1. ThreadGroup
+ *    - 스레드가 속한 그룹을 반환한다.
+ *    - 기본적으로 모든 스레드는 부모 스레드와 동일한 스레드 그룹에 속한다.
+ *    - 스레드 그룹을 기준으로 일괄 종료, 우선순위 설정을 할 수 있다.
+ *    - 부모 스레드: 위 코드를 예시로 myThread1의 부모는 main 스레드이다.
+ * 
+ * 2. Thread State (getState() 메서드)
+ *    - 스레드의 현재 상태를 반환하는 메서드
+ *    - 반환되는 값은 Thread.State 열거형에 정의된 상수 중 하나
+ * 
+ *    주요 상태:
+ *    ┌─────────────────┬────────────────────────────────────────────────┐
+ *    │ NEW             │ 스레드가 아직 시작되지 않은 상태                  │
+ *    │ RUNNABLE        │ 스레드가 실행 중이거나 실행될 준비가 된 상태       │
+ *    │ BLOCKED         │ 스레드가 동기화 락을 기다리는 상태                │
+ *    │ WAITING         │ 스레드가 다른 스레드의 특정 작업 완료를 기다리는 상태 │
+ *    │ TIMED_WAITING   │ 일정 시간 동안 기다리는 상태                     │
+ *    │ TERMINATED      │ 스레드가 실행을 마친 상태                        │
+ *    └─────────────────┴────────────────────────────────────────────────┘
  */
