@@ -2,7 +2,7 @@
 
 ---
 
-![img.png](../img1/img.png)
+![img.png](../img/img.png)
 
 ## 1. Thread State 상세 분석
 

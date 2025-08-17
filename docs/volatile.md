@@ -7,7 +7,7 @@
 ### 🎯 메모리 가시성이란?
 **메모리 가시성(Memory Visibility)**은 멀티스레드 환경에서 **한 스레드가 변경한 값이 다른 스레드에서 언제 보이는지**에 대한 문제입니다.
 
-![img.png](../img2/img.png)
+![img.png](../img/img2.png)
 
 ```mermaid
 graph TD
