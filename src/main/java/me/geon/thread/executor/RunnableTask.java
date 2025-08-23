@@ -1,4 +1,4 @@
-package executor;
+package me.geon.thread.executor;
 
 import me.geon.thread.Utils;
 

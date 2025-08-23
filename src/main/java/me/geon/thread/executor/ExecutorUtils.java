@@ -1,4 +1,4 @@
-package executor;
+package me.geon.thread.executor;
 
 import java.util.concurrent.ExecutorService;
 

@@ -1,7 +1,6 @@
-package executor;
+package me.geon.thread.executor;
 
 import me.geon.thread.Utils;
-import org.springframework.expression.common.ExpressionUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -33,7 +32,8 @@ public class ExecutorBasicMain {
         ExecutorUtils.printState(es);
 
 
-        es.shutdown();
+        // 자바 19 이상에서 가능하다.
+        es.close(); // 새로운 작업 받지 않고 기존 작업 완료 대기
         ExecutorUtils.printState(es);
     }
 }

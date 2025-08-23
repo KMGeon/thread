@@ -1,6 +1,5 @@
 package me.geon.thread;
 
-import jdk.jshell.execution.Util;
 
 public class volatile_1 {
 	public static void main(String[] args) {
