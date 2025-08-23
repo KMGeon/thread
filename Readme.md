@@ -61,9 +61,7 @@ Java 멀티스레드 프로그래밍을 공부하면서 정리한 내용들입�
 - **메모리 가시성 개념**: CPU 캐시와 메인 메모리 구조
 - **가시성 문제 실제 분석**: 문제 발생 조건과 해결 과정
 - **volatile 동작 원리**: 캐시 우회와 메인 메모리 직접 접근
-- **성능 영향 분석**: 467% 오버헤드와 영향 요인
 - **Java Memory Model**: happens-before 규칙과 메모리 순서 보장
-- **실전 패턴**: 더블 체크 락킹, Producer-Consumer, 진행률 모니터링
 - **사용 가이드라인**: 적절한 사용 시나리오와 한계
 
 ### 🔐 **고급 동기화와 락**
@@ -76,7 +74,6 @@ Java 멀티스레드 프로그래밍을 공부하면서 정리한 내용들입�
 - **Producer-Consumer 패턴**: 생산자-소비자 문제 해결 방법
 - **notify() vs notifyAll()**: 선택 기준과 성능 비교
 - **데드락과 기아 상태**: 문제점과 해결 방안
-- **실무 활용 패턴**: 작업 큐, 리소스 풀, 이벤트 처리
 
 #### 6. [🔐 Concurrent Lock 완전 가이드](./docs/concurrentLock.md)
 > **ReentrantLock을 활용한 고급 락 제어**
@@ -94,9 +91,6 @@ Java 멀티스레드 프로그래밍을 공부하면서 정리한 내용들입�
 - **Condition의 필요성**: synchronized + wait/notify의 한계점
 - **Multiple Condition**: 조건별 대기 큐 분리와 활용
 - **BlockingQueue 구현**: 생산자-소비자 패턴의 완전한 구현
-- **성능 최적화**: Lock 경합 최소화와 효율적인 대기
-- **실무 적용 사례**: 커넥션 풀, 작업 스케줄러, 이벤트 버스
-- **디버깅 가이드**: 락 경합과 데드락 문제 해결
 
 ### 📦 **Thread-Safe 컬렉션**
 
@@ -127,7 +121,6 @@ Java 멀티스레드 프로그래밍을 공부하면서 정리한 내용들입�
   - **CachedThreadPool**: 동적 스레드 관리
   - **SingleThreadExecutor**: 순차 실행 보장
 - **작업 제출과 관리**: execute() vs submit(), shutdown() vs shutdownNow()
-- **실무 튜닝 가이드**: 스레드 수 결정, 큐 크기, 모니터링 방법
 
 #### 10. [🔮 Future & CompletableFuture 완전 가이드](./docs/Future.md)
 > **비동기 작업의 결과 처리와 조합**
