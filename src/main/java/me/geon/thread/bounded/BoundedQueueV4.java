@@ -11,6 +11,7 @@ import static me.geon.thread.Utils.logger;
 public class BoundedQueueV4 implements BoundedQueue {
 
     private final Lock lock = new ReentrantLock();
+    // condition은 대기집합이라고 생각하면 된다.
     private final Condition condition = lock.newCondition();
 
     private final Queue<String> queue = new ArrayDeque<>();
@@ -27,6 +28,7 @@ public class BoundedQueueV4 implements BoundedQueue {
             while (queue.size() == max) {
                 logger("[put] 큐가 가득 참, 생산자 대기");
                 try {
+                    // await : Object.wait() 비슷하다.
                     condition.await();
                     logger("[put] 생산자 깨어남");
                 } catch (InterruptedException e) {
@@ -57,6 +59,7 @@ public class BoundedQueueV4 implements BoundedQueue {
             }
             String data = queue.poll();
             logger("[take] 소비자 데이터 획득, signal() 호출");
+            // signal : Object.notify()와 비슷하다.
             condition.signal();
             return data;
         } finally {
