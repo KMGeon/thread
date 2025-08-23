@@ -11,9 +11,9 @@ public class BoundedMain {
     public static void main(String[] args) {
         // 1. BoundedQueue 선택
         //BoundedQueue queue = new BoundedQueueV1(2);
-        BoundedQueue queue = new BoundedQueueV2(2);
-        //BoundedQueue queue = new BoundedQueueV3(2);
-        //BoundedQueue queue = new BoundedQueueV4(2);
+        // BoundedQueue queue = new BoundedQueueV2(2);
+        BoundedQueue queue = new BoundedQueueV3(2);
+        //BoundedQueue queue = new Boun  dedQueueV4(2);
         //BoundedQueue queue = new BoundedQueueV5(2);
         //BoundedQueue queue = new BoundedQueueV6_1(2);
         //BoundedQueue queue = new BoundedQueueV6_2(2);
