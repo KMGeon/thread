@@ -468,3 +468,155 @@ public class FutureCancelMain {
 - **스레드 풀과 Executor 프레임워크**는 스레드 직접 생성의 단점(성능, 관리, 인터페이스 불편함)을 해결함
 - **Callable, Future**를 통해 반환값과 예외 처리가 가능해지고, 비동기 작업의 결과를 효율적으로 관리할 수 있음
 - **ExecutorService**는 다양한 작업 제출/관리 메서드와 스레드 풀관리 기능을 제공, 실무에서 멀티스레드 프로그래밍을 간결하고 안전하게 구현할 수 있게 해줌
+
+
+## 정리
+
+| 구분 | 제어권 반환 | 결과 수신 | 특징 | 사용 사례 |
+|------|-------------|-----------|------|-----------|
+| **동기 + Blocking** | 작업 완료 후 | 즉시 | 가장 직관적 | 간단한 순차 처리 |
+| **비동기 + Non-blocking** | 즉시 | 나중에 콜백 | 가장 효율적 | 고성능 서버 |
+| **동기 + Non-blocking** | 즉시 | 폴링으로 확인 | 폴링 오버헤드 | 게임, 실시간 시스템 |
+| **비동기 + Blocking** | 작업 완료 후 | 나중에 | 비효율적 패턴 | 피해야 할 패턴 |
+
+**핵심 원칙:**
+1. **I/O 집약적** → 비동기 + Non-blocking
+2. **CPU 집약적** → 동기 + Blocking (적절한 스레드 풀)
+3. **간단한 로직** → 동기 + Blocking
+4. **높은 동시성** → 비동기 + Non-blocking
+
+---
+
+## CompletableFuture 심화
+
+Java 8에서 추가된 CompletableFuture는 기존 Future의 한계를 뛰어넘는 강력한 비동기 처리 도구다.
+
+### 기본 사용법
+
+#### 1. 작업 생성
+```java
+// 반환값이 없는 작업
+CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+    System.out.println("작업 실행");
+});
+
+// 반환값이 있는 작업  
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
+    return "작업 결과";
+});
+```
+
+#### 2. 결과 처리 (콜백 체이닝)
+```java
+CompletableFuture.supplyAsync(() -> "초기값")
+    .thenApply(value -> value.toUpperCase())     // 변환
+    .thenAccept(value -> System.out.println(value)) // 최종 처리
+    .thenRun(() -> System.out.println("완료"));      // 추가 작업
+```
+
+### 주요 메서드 비교
+
+| 메서드 | 이전 결과 | 반환 타입 | 용도 |
+|--------|-----------|-----------|------|
+| `thenApply()` | 받음 | 새로운 값 | 데이터 변환 |
+| `thenAccept()` | 받음 | void | 최종 소비 |
+| `thenRun()` | 안받음 | void | 독립적 후속 작업 |
+
+### 작업 조합
+
+#### 순차 실행 (thenCompose)
+```java
+// 첫 번째 작업 결과로 두 번째 작업 실행
+CompletableFuture<String> result = CompletableFuture
+    .supplyAsync(() -> getUserId())
+    .thenCompose(userId -> 
+        CompletableFuture.supplyAsync(() -> getUserName(userId))
+    );
+```
+
+#### 병렬 실행 (thenCombine)
+```java
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Hello");
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "World");
+
+CompletableFuture<String> combined = future1.thenCombine(future2, 
+    (s1, s2) -> s1 + " " + s2);
+```
+
+#### 다중 작업 처리
+```java
+CompletableFuture<String> cf1 = CompletableFuture.supplyAsync(() -> "작업1");
+CompletableFuture<String> cf2 = CompletableFuture.supplyAsync(() -> "작업2");
+CompletableFuture<String> cf3 = CompletableFuture.supplyAsync(() -> "작업3");
+
+// 모든 작업 완료 대기
+CompletableFuture<Void> allOf = CompletableFuture.allOf(cf1, cf2, cf3);
+
+// 첫 번째 완료 작업 사용
+CompletableFuture<Object> anyOf = CompletableFuture.anyOf(cf1, cf2, cf3);
+```
+
+### 예외 처리
+
+```java
+CompletableFuture.supplyAsync(() -> {
+    if (Math.random() > 0.5) {
+        throw new RuntimeException("에러 발생");
+    }
+    return "성공";
+})
+.exceptionally(throwable -> {
+    System.out.println("에러 처리: " + throwable.getMessage());
+    return "기본값";
+})
+.thenAccept(result -> System.out.println("결과: " + result));
+```
+
+### 실전 활용 - 마이크로서비스 호출
+
+```java
+public class OrderService {
+    
+    // 여러 서비스 동시 호출로 주문 정보 조회
+    public CompletableFuture<OrderDetail> getOrderDetail(Long orderId) {
+        // 3개 서비스 동시 호출
+        CompletableFuture<Order> orderFuture = 
+            CompletableFuture.supplyAsync(() -> orderClient.getOrder(orderId));
+            
+        CompletableFuture<User> userFuture = 
+            CompletableFuture.supplyAsync(() -> userClient.getUser(orderId));
+            
+        CompletableFuture<List<Product>> productsFuture = 
+            CompletableFuture.supplyAsync(() -> productClient.getProducts(orderId));
+        
+        // 모든 결과를 조합하여 응답 생성
+        return CompletableFuture.allOf(orderFuture, userFuture, productsFuture)
+            .thenApply(v -> OrderDetail.builder()
+                .order(orderFuture.join())
+                .user(userFuture.join())
+                .products(productsFuture.join())
+                .build())
+            .exceptionally(throwable -> {
+                log.error("주문 정보 조회 실패", throwable);
+                return OrderDetail.empty();
+            });
+    }
+}
+```
+
+### 주의사항
+
+1. **무분별한 사용 금지**: 간단한 작업까지 CompletableFuture로 감싸면 오히려 성능 저하
+2. **스레드 풀 설정**: 기본 ForkJoinPool보다는 커스텀 ExecutorService 사용 권장
+3. **예외 처리**: 비동기 환경에서는 예외가 다른 스레드에서 발생하므로 반드시 처리 필요
+
+```java
+// 커스텀 스레드 풀 사용
+ExecutorService executor = Executors.newFixedThreadPool(10);
+
+CompletableFuture.supplyAsync(() -> {
+    return "작업 결과";
+}, executor);  // 두 번째 파라미터로 executor 전달
+```
+
+CompletableFuture는 복잡한 비동기 워크플로우를 간단하게 만들어주지만, 적절한 상황에서 올바르게 사용해야 그 효과를 제대로 볼 수 있다.
